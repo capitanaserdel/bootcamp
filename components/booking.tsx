@@ -3,11 +3,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CldUploadButton } from "next-cloudinary";
-import type {
-  CloudinaryUploadWidgetResults,
-  CloudinaryUploadWidgetError,
-} from "next-cloudinary";
 import {
   Ticket,
   Loader2,
@@ -16,91 +11,79 @@ import {
   ArrowLeft,
   ArrowRight,
   User,
-  Upload,
-  ImageIcon,
 } from "lucide-react";
-
-import Image from "next/image";
-import { useTicketPurchase } from "@/lib/use-ticket-api";
 import Link from "next/link";
 
 interface BookingFormData {
   name: string;
   email: string;
   phone: string;
-  accountToPay: string;
+  gender: string;
+  techExperience: string;
+  laptopAccess: string;
+  laptopSpecFile?: File | null;
 }
 
+type FormErrors = Partial<Record<keyof BookingFormData, string>>;
 type Step = 1 | 2 | 3;
 
-export default function BookingFormMultiStepWithAPI() {
-  const {
-    purchaseTicketMutation,
-    isLoading: apiLoading,
-    error: apiError,
-  } = useTicketPurchase();
-
+export default function RegistrationForm() {
   const [currentStep, setCurrentStep] = useState<Step>(1);
   const [formData, setFormData] = useState<BookingFormData>({
     name: "",
     email: "",
     phone: "",
-    accountToPay: "",
+    gender: "",
+    techExperience: "",
+    laptopAccess: "",
+    laptopSpecFile: null,
   });
 
-  const [errors, setErrors] = useState<Partial<BookingFormData>>({});
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
-  const [uploadedImageId, setUploadedImageId] = useState<string>("");
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<FormErrors>({});
   const [isComplete, setIsComplete] = useState(false);
-  const [isCloudinaryOpening, setIsCloudinaryOpening] = useState(false);
+  const [apiLoading, setApiLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const steps = [
     { number: 1, title: "Personal Info", icon: User },
-    { number: 2, title: "Payment Proof", icon: Upload },
+    { number: 2, title: "Background Info", icon: User },
     { number: 3, title: "Complete", icon: CheckCircle },
   ];
 
   const validateStep1 = (): boolean => {
-    const newErrors: Partial<BookingFormData> = {};
+    const newErrors: FormErrors = {};
+    if (!formData.name.trim()) newErrors.name = "Full name is required";
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Email is invalid";
+    if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
+    if (!formData.gender.trim()) newErrors.gender = "Gender is required";
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Full name is required";
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
-    }
-
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Phone number is required";
-    }
-
-    if (!formData.accountToPay.trim()) {
-      newErrors.accountToPay = "Account number is required";
-    } else if (!/^\d{10}$/.test(formData.accountToPay)) {
-      newErrors.accountToPay = "Account number must be exactly 10 digits";
-    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const validateStep2 = (): boolean => {
-    if (!uploadedImageUrl) {
-      setUploadError("Please upload your payment receipt first");
+    const newErrors: FormErrors = {};
+    if (!formData.techExperience.trim()) {
+      (newErrors as FormErrors).techExperience = "Please select your tech experience level";
+    }
+    if (formData.laptopAccess === "No") {
+      (newErrors as FormErrors).laptopAccess = "A laptop is required to join this bootcamp";
+      setErrors(newErrors);
       return false;
     }
-    return true;
+    if (!formData.laptopAccess.trim()) {
+      (newErrors as FormErrors).laptopAccess = "Laptop access is required";
+    } else if (formData.laptopAccess === "Yes" && !formData.laptopSpecFile) {
+      (newErrors as FormErrors).laptopSpecFile = "Laptop specification file is required";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleNext = () => {
     if (currentStep === 1 && validateStep1()) {
       setCurrentStep(2);
-    } else if (currentStep === 2 && validateStep2()) {
-      setCurrentStep(3);
     }
   };
 
@@ -108,32 +91,29 @@ export default function BookingFormMultiStepWithAPI() {
     setCurrentStep((prev) => Math.max(prev - 1, 1) as Step);
   };
 
-  const handleInputChange = (field: keyof BookingFormData, value: string) => {
+  const handleInputChange = (
+    field: keyof BookingFormData,
+    value: string | File | null
+  ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
-    }
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
   };
 
   const handleFinalSubmit = async () => {
-    if (!uploadedImageUrl) {
-      setUploadError("Please upload payment proof first");
-      return;
-    }
-
     try {
-      const ticketData = {
-        fullName: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        accountToPay: formData.accountToPay,
-        imageUrl: uploadedImageUrl,
-      };
+      setApiLoading(true);
+      setApiError(null);
 
-      const response = await purchaseTicketMutation(ticketData);
-      setIsComplete(true);
+      // Here you’d send formData to your backend
+      console.log("Submitting registration:", formData);
+
+      setTimeout(() => {
+        setIsComplete(true);
+        setApiLoading(false);
+      }, 1500);
     } catch (error) {
-      console.error("❌ Ticket purchase failed:", error);
+      setApiError("Something went wrong. Please try again.");
+      setApiLoading(false);
     }
   };
 
@@ -141,20 +121,17 @@ export default function BookingFormMultiStepWithAPI() {
     switch (currentStep) {
       case 1:
         return (
-          <div className="space-y-1">
-            <div className="text-center mb-1">
-              <User className="w-3 h-3 mx-auto text-orange-500" />
-              <h3 className="text-base font-semibold text-gray-900 mt-1">
+          <div className="space-y-4">
+            <div className="text-center mb-2">
+              <User className="w-5 h-5 mx-auto text-purple-500" />
+              <h3 className="text-lg font-semibold text-gray-900 mt-1">
                 Personal Information
               </h3>
-              <p className="text-xs text-gray-600">
-                Please fill in your details
-              </p>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Full Name
                 </label>
                 <Input
@@ -162,17 +139,13 @@ export default function BookingFormMultiStepWithAPI() {
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
                   placeholder="Enter your full name"
-                  className={`${
-                    errors.name ? "border-red-500" : "border-gray-300"
-                  } focus:border-orange-400 focus:ring-orange-400 h-8 text-xs`}
+                  className={`${errors.name ? "border-red-500" : "border-gray-300"} h-10 text-sm`}
                 />
-                {errors.name && (
-                  <p className="text-red-500 text-xs mt-1">{errors.name}</p>
-                )}
+                {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Email Address
                 </label>
                 <Input
@@ -180,17 +153,13 @@ export default function BookingFormMultiStepWithAPI() {
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   placeholder="example@gmail.com"
-                  className={`${
-                    errors.email ? "border-red-500" : "border-gray-300"
-                  } focus:border-orange-400 focus:ring-orange-400 h-8 text-xs`}
+                  className={`${errors.email ? "border-red-500" : "border-gray-300"} h-10 text-sm`}
                 />
-                {errors.email && (
-                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-                )}
+                {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Phone Number
                 </label>
                 <Input
@@ -198,183 +167,89 @@ export default function BookingFormMultiStepWithAPI() {
                   value={formData.phone}
                   onChange={(e) => handleInputChange("phone", e.target.value)}
                   placeholder="+234 809 342 3456"
-                  className={`${
-                    errors.phone ? "border-red-500" : "border-gray-300"
-                  } focus:border-orange-400 focus:ring-orange-400 h-8 text-xs`}
+                  className={`${errors.phone ? "border-red-500" : "border-gray-300"} h-10 text-sm`}
                 />
-                {errors.phone && (
-                  <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
-                )}
+                {errors.phone && <p className="text-red-500 text-xs">{errors.phone}</p>}
               </div>
-
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Account Number used in sending
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Gender
                 </label>
-                <Input
-                  type="tel"
-                  value={formData.accountToPay}
-                  onChange={(e) => {
-                    const value = e.target.value
-                      .replace(/\D/g, "")
-                      .slice(0, 10);
-                    handleInputChange("accountToPay", value);
-                  }}
-                  placeholder="e.g 1234567890"
-                  className={`${
-                    errors.accountToPay ? "border-red-500" : "border-gray-300"
-                  } focus:border-orange-400 focus:ring-orange-400 h-8 text-xs`}
-                />
-                {errors.accountToPay && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.accountToPay}
-                  </p>
-                )}
-              </div>
-
-              <div className="bg-gradient-to-r from-orange-50 to-red-50 p-2 rounded-lg flex flex-col items-center justify-center">
-                <h4 className="font-bold text-center text-xs text-gray-900">
-                  Registration Details
-                </h4>
-               
-                  <span>
-                   Account number: <span className="text-base font-bold text-orange-600"> 0005286073</span>
-                  </span>
-                  <h2>
-                   Bank name: <span  className="text-md font-bold text-black">Taj bank</span>  
-                  </h2>
-                  <span>
-                  Account name: <span  className="text-xs font-bold text-black">Shining voice global link</span> 
-                  </span>
-               
-               
-                   <span className="font-bold text-base text-orange-600">
-                    ₦5,000
-                  </span>
+                <select
+                  value={formData.gender}
+                  onChange={(e) => handleInputChange("gender", e.target.value)}
+                  className={`${errors.gender ? "border-red-500" : "border-gray-300"} h-10 text-sm w-full rounded-md border`}
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Female">Female</option>
+                </select>
+                {errors.gender && <p className="text-red-500 text-xs">{errors.gender}</p>}
               </div>
             </div>
           </div>
         );
-
       case 2:
         return (
-          <div className="space-y-3">
-            <div className="text-center mb-3">
-              <Upload className="w-6 h-6 mx-auto text-orange-500" />
-              <h3 className="text-base font-semibold text-gray-900 mt-1">
-                Upload Payment Proof
+          <div className="space-y-4">
+            <div className="text-center mb-2">
+              <User className="w-5 h-5 mx-auto text-purple-500" />
+              <h3 className="text-lg font-semibold text-gray-900 mt-1">
+                Background Information
               </h3>
             </div>
 
-            {uploadError && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-2 flex items-start space-x-2">
-                <AlertCircle className="w-3 h-3 text-red-500 mt-0.5" />
-                <p className="text-red-800 text-xs">{uploadError}</p>
-              </div>
-            )}
-
-            {!uploadedImageUrl ? (
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-3 text-center">
-                <ImageIcon className="w-6 h-6 text-gray-400 mx-auto" />
-                <p className="text-xs text-gray-600 mt-2 mb-3">
-                  {isUploading || isCloudinaryOpening
-                    ? "Preparing upload..."
-                    : "Click to upload payment receipt"}
-                </p>
-
-                <CldUploadButton
-                  uploadPreset="payment-upload"
-                  options={{
-                    maxFiles: 1,
-                    folder: "payment-receipts",
-                    resourceType: "image",
-                    maxFileSize: 10000000,
-                    sources: ["local", "camera"],
-                    multiple: false,
-                    clientAllowedFormats: ["jpg", "jpeg", "png", "gif", "webp"],
-                  }}
-                  onOpen={() => {
-                    setIsCloudinaryOpening(true);
-                    setUploadError(null);
-                  }}
-                  onSuccess={(results: CloudinaryUploadWidgetResults) => {
-                    setIsCloudinaryOpening(false);
-                    if (
-                      results.info &&
-                      typeof results.info === "object" &&
-                      "secure_url" in results.info
-                    ) {
-                      const info = results.info;
-                      setUploadedImageUrl(info.secure_url);
-                      setUploadedImageId(info.public_id);
-                      setUploadError(null);
-                    }
-                    setIsUploading(false);
-                  }}
-                  onError={(error: CloudinaryUploadWidgetError) => {
-                    setIsCloudinaryOpening(false);
-                    setUploadError("Upload failed. Please try again.");
-                    setIsUploading(false);
-                  }}
-                  onUpload={() => {
-                    setIsUploading(true);
-                    setUploadError(null);
-                  }}
-                  className="w-full"
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tech Experience
+                </label>
+                <select
+                  value={formData.techExperience}
+                  onChange={(e) => handleInputChange("techExperience", e.target.value)}
+                  className={`${errors.techExperience ? "border-red-500" : "border-gray-300"} h-10 text-sm w-full rounded-md border`}
                 >
-                  <Button
-                    className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-xs h-7"
-                    disabled={isCloudinaryOpening || isUploading}
-                  >
-                    {isCloudinaryOpening || isUploading ? (
-                      <>
-                        <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                        Please wait...
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="w-3 h-3 mr-1" />
-                        Choose Payment Receipt
-                      </>
-                    )}
-                  </Button>
-                </CldUploadButton>
+                  <option value="">Select experience level</option>
+                  <option value="None">None</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+                {errors.techExperience && <p className="text-red-500 text-xs">{errors.techExperience}</p>}
               </div>
-            ) : (
-              <div className="space-y-2">
-                <div className="bg-green-50 border border-green-200 rounded-lg p-2">
-                  <div className="flex items-center space-x-2">
-                    <CheckCircle className="w-3 h-3 text-green-500" />
-                    <p className="text-green-800 text-xs">
-                      Payment receipt uploaded!
-                    </p>
-                  </div>
-                </div>
 
-                <div className="border rounded-lg p-1 bg-white">
-                  <Image
-                    src={uploadedImageUrl}
-                    alt="Payment receipt"
-                    width={250}
-                    height={150}
-                    className="w-full h-auto max-h-32 mx-auto rounded object-contain"
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Do you have access to a laptop?
+                </label>
+                <select
+                  value={formData.laptopAccess}
+                  onChange={(e) => handleInputChange("laptopAccess", e.target.value)}
+                  className={`${errors.laptopAccess ? "border-red-500" : "border-gray-300"} h-10 text-sm w-full rounded-md border`}
+                >
+                  <option value="">Select an option</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+                {errors.laptopAccess && <p className="text-red-500 text-xs">{errors.laptopAccess}</p>}
+              </div>
+
+              {formData.laptopAccess === "Yes" && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Upload Laptop Specifications (PDF, image)
+                  </label>
+                  <Input
+                    type="file"
+                    accept=".pdf,image/*"
+                    onChange={(e) =>
+                      handleInputChange("laptopSpecFile", e.target.files?.[0] ?? null)
+                    }
+                    className={`${errors.laptopSpecFile ? "border-red-500" : "border-gray-300"} h-10 text-sm`}
                   />
+                  {errors.laptopSpecFile && <p className="text-red-500 text-xs">{errors.laptopSpecFile}</p>}
                 </div>
-
-                <div className="text-center">
-                  <Button
-                    onClick={() => {
-                      setUploadedImageUrl("");
-                      setUploadedImageId("");
-                    }}
-                    variant="outline"
-                    className="text-xs h-7"
-                  >
-                    Upload Different Image
-                  </Button>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         );
 
@@ -382,56 +257,28 @@ export default function BookingFormMultiStepWithAPI() {
         return (
           <div className="space-y-3">
             <div className="text-center mb-2">
-              <CheckCircle className="w-6 h-6 mx-auto text-orange-500" />
-              <h3 className="text-sm font-semibold text-gray-900 mt-1">
+              <CheckCircle className="w-6 h-6 mx-auto text-green-500" />
+              <h3 className="text-lg font-semibold text-gray-900 mt-1">
                 Review & Complete
               </h3>
-              <p className="text-xs text-gray-600">
-                Review your information before submitting
-              </p>
             </div>
 
-            <div className="bg-gray-50 rounded-lg p-2 text-xs">
-              <h4 className="font-semibold text-gray-900 mb-1">
-                Your Information:
-              </h4>
-              <div className="space-y-1">
-                <p>
-                  <span className="font-medium">Name:</span> {formData.name}
-                </p>
-                <p>
-                  <span className="font-medium">Email:</span> {formData.email}
-                </p>
-                <p>
-                  <span className="font-medium">Phone:</span> {formData.phone}
-                </p>
-                <p>
-                  <span className="font-medium">Account:</span>{" "}
-                  {formData.accountToPay}
-                </p>
-              </div>
+            <div className="bg-gray-50 rounded-lg p-3 text-sm">
+              <h4 className="font-semibold text-gray-900 mb-2">Your Information:</h4>
+              <p><span className="font-medium">Name:</span> {formData.name}</p>
+              <p><span className="font-medium">Email:</span> {formData.email}</p>
+              <p><span className="font-medium">Phone:</span> {formData.phone}</p>
+              <p><span className="font-medium">Gender:</span> {formData.gender}</p>
+              <p><span className="font-medium">Tech Experience:</span> {formData.techExperience}</p>
+              <p><span className="font-medium">Laptop Access:</span> {formData.laptopAccess}</p>
+              {formData.laptopAccess === "Yes" && (
+                <p><span className="font-medium">Laptop Spec File:</span> {formData.laptopSpecFile?.name ?? "—"}</p>
+              )}
             </div>
-
-            {uploadedImageUrl && (
-              <div className="bg-gray-50 rounded-lg p-2">
-                <h4 className="font-semibold text-xs text-gray-900 mb-1">
-                  Payment Receipt:
-                </h4>
-                <div className="border rounded overflow-hidden">
-                  <Image
-                    src={uploadedImageUrl}
-                    alt="Payment receipt"
-                    width={200}
-                    height={120}
-                    className="w-full h-auto max-h-24 mx-auto object-contain"
-                  />
-                </div>
-              </div>
-            )}
 
             {apiError && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-2 flex items-start space-x-2">
-                <AlertCircle className="w-3 h-3 text-red-500 mt-0.5" />
+                <AlertCircle className="w-4 h-4 text-red-500 mt-0.5" />
                 <p className="text-red-800 text-xs">{apiError}</p>
               </div>
             )}
@@ -443,29 +290,22 @@ export default function BookingFormMultiStepWithAPI() {
   if (isComplete) {
     return (
       <section className="py-8 bg-gray-100 min-h-screen flex items-center justify-center">
-        <div className="max-w-xs mx-auto px-4 w-full">
-          <div className="bg-white flex flex-col justify-center rounded-lg p-4 shadow-sm">
-            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-              <CheckCircle className="w-5 h-5 text-green-500" />
+        <div className="max-w-md sm:max-w-lg mx-auto px-4 w-full">
+          <div className="bg-white rounded-lg p-6 shadow-sm text-center">
+            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+              <CheckCircle className="w-6 h-6 text-green-500" />
             </div>
-            <h2 className="text-base font-bold text-gray-900 mt-2 text-center">
-              Ticket Purchase Successful! 🎉
+            <h2 className="text-lg font-bold text-gray-900 mt-3">
+              Registration Successful! 🎉
             </h2>
-            <p className="text-xs text-gray-600 mt-2 text-center">
+            <p className="text-sm text-gray-600 mt-2">
               You'll receive a confirmation email shortly.
             </p>
 
-            <div className="bg-green-50 border border-green-200 rounded-lg p-2 mt-3">
-              <p className="text-green-800 text-xs">
-                <strong>Next Steps:</strong>
-                <br />• Check your email
-                <br />• Save your ticket
-                <br />• Arrive on time
-              </p>
-             
-            </div>
-            <Link href='/hero'>
-             <Button  variant='ghost' className="mt-2 rounded-lg border-orange-500 border w-full">Done</Button>
+            <Link href="/hero">
+              <Button variant="ghost" className="mt-4 rounded-lg border-purple-500 border w-full h-10">
+                Done
+              </Button>
             </Link>
           </div>
         </div>
@@ -474,84 +314,76 @@ export default function BookingFormMultiStepWithAPI() {
   }
 
   return (
-    <section className="py-4 bg-gray-100 min-h-screen flex items-center justify-center">
+    <section className="py-8 bg-gray-100 min-h-screen flex items-center justify-center">
       <div className="container mx-auto px-4 w-full">
-        <div className="max-w-xs mx-auto">
+        {/* ⬇️ Wider form */}
+        <div className="max-w-lg sm:max-w-xl md:max-w-2xl mx-auto">
           <Card className="shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-orange-50 to-red-50 p-3">
-              <CardTitle className="flex items-center justify-between text-orange-700 text-sm">
+            <CardHeader className="bg-gradient-to-r from-pink-50 to-purple-50 p-4">
+              <CardTitle className="flex items-center justify-between text-purple-700 text-base">
                 <div className="flex items-center">
-                  <Ticket className="w-3 h-3 mr-1" />
-                  <span>Register for Art Speaks Here</span>
+                  <Ticket className="w-4 h-4 mr-2" />
+                  <span>Register for Bootcamp</span>
                 </div>
                 <span className="text-xs">Step {currentStep} of 3</span>
               </CardTitle>
-
-              <div className="flex items-center justify-between mt-2">
-                {steps.map((step, index) => (
-                  <div key={step.number} className="flex items-center">
-                    <div
-                      className={`w-5 h-5 rounded-full flex items-center justify-center text-xs ${
-                        currentStep >= step.number
-                          ? "bg-orange-500 text-white"
-                          : "bg-gray-200 text-gray-600"
-                      }`}
-                    >
-                      {currentStep > step.number ? "✓" : step.number}
-                    </div>
-                    {index < steps.length - 1 && (
-                      <div
-                        className={`w-6 h-1 mx-0.5 ${
-                          currentStep > step.number
-                            ? "bg-orange-500"
-                            : "bg-gray-200"
-                        }`}
-                      />
-                    )}
-                  </div>
-                ))}
-              </div>
             </CardHeader>
 
-            <CardContent className="p-3">
-              <div className="max-h-[400px] overflow-y-auto">
+            <CardContent className="p-4 ">
+              <div className="max-h-[500px] overflow-y-auto">
                 {renderStepContent()}
               </div>
 
-              <div className="flex space-x-2 mt-4">
-                {currentStep > 1 && (
+              <div className="flex space-x-3 mt-6">
+                {(currentStep === 2 || currentStep === 3) && (
                   <Button
                     onClick={handleBack}
                     variant="outline"
-                    className="flex-1 border-orange-300 text-orange-600 hover:bg-orange-50 text-xs h-7"
+                    className="flex-1 border-purple-300 text-purple-600 hover:bg-pink-50 text-sm h-10"
                   >
-                    <ArrowLeft className="w-2.5 h-2.5 mr-1" />
+                    <ArrowLeft className="w-4 h-4 mr-1" />
                     Back
                   </Button>
                 )}
 
-                {currentStep < 3 ? (
+                {currentStep === 1 && (
                   <Button
                     onClick={handleNext}
-                    className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-xs h-7"
+                    className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-blue-600 hover:to-pink-600 text-white text-sm h-10"
                   >
                     Next
-                    <ArrowRight className="w-2.5 h-2.5 ml-1" />
+                    <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>
-                ) : (
+                )}
+
+                {currentStep === 2 && (
+                  <Button
+                    onClick={() => {
+                      if (validateStep2()) {
+                        setCurrentStep(3);
+                      }
+                    }}
+                    className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-blue-600 hover:to-purple-600 text-white text-sm h-10"
+                  >
+                    Next
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </Button>
+                )}
+
+                {currentStep === 3 && (
                   <Button
                     onClick={handleFinalSubmit}
-                    className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white text-xs h-7"
+                    className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white text-sm h-10"
                     disabled={apiLoading}
                   >
                     {apiLoading ? (
                       <>
-                        <Loader2 className="w-2.5 h-2.5 mr-1 animate-spin" />
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                         Submitting...
                       </>
                     ) : (
                       <>
-                        <CheckCircle className="w-2.5 h-2.5 mr-1" />
+                        <CheckCircle className="w-4 h-4 mr-2" />
                         Complete
                       </>
                     )}

@@ -18,7 +18,7 @@ export default function HeroSection({ onBookNow }: HeroSectionProps) {
   }
 
   return (
-    <section className="relative bg-gradient-to-br from-orange-500 via-orange-600 to-red-500 text-white overflow-hidden min-h-screen flex items-center">
+    <section className="relative bg-gradient-to-br from-pink-800 via-pink-500 to-blue-500 text-white overflow-hidden min-h-screen flex items-center">
       {/* Animated Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 animate-pulse"></div>
@@ -26,22 +26,49 @@ export default function HeroSection({ onBookNow }: HeroSectionProps) {
 
       {/* Floating Animation Elements */}
       <div className="absolute top-20 left-10 w-4 h-4 bg-white/20 rounded-full animate-bounce delay-1000 hidden md:block"></div>
-      <div className="absolute top-40 right-20 w-6 h-6 bg-orange-300/30 rounded-full animate-bounce delay-2000 hidden md:block"></div>
+      <div className="absolute top-40 right-20 w-6 h-6 bg-pink-300/30 rounded-full animate-bounce delay-2000 hidden md:block"></div>
       <div className="absolute bottom-40 left-20 w-3 h-3 bg-white/30 rounded-full animate-bounce delay-3000 hidden md:block"></div>
 
-      <div ref={heroRef} className="relative container mx-auto px-4 py-8 sm:py-12 md:py-16 lg:py-20">
+      <div ref={heroRef} className="relative container mx-auto px-4 py-8 sm:py-12 md:py-16 lg:py-10">
         {/* Shining Voice Global Link Branding */}
-        <div
-          className={`text-center mb-8 sm:mb-12 transition-all duration-1000 ${
-            heroVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
-          }`}
-        >
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 transform hover:scale-105 transition-transform duration-300 font-serif">
-            <span className="text-orange-200 drop-shadow-lg">Shining Voice</span>
-          </h1>
-          <p className="text-orange-200 text-xs sm:text-sm tracking-wider animate-pulse">GLOBAL LINK</p>
-        </div>
+     <div
+  className={`text-center mb-8 sm:mb-12 transition-all duration-1000 ${
+    heroVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
+  }`}
+><div className="flex flex-row sm:flex-row items-start sm:items-start justify-center gap-6">
+  {/* First item */}
+  <div className="flex flex-col items-start sm:items-start text-center sm:text-left">
+    <h1 className="text-xs sm:text-xl md:text-sm font-bold text-blue-50 text-md sm:text-xl tracking-wider animate-pulse drop-shadow-lg font-serif">
+      Proudly Sponsored by
+    </h1>
+    <div className="w-38 h-24 sm:w-44 sm:h-20 bg-white rounded-md flex items-center justify-center mb-2 shadow-md">
+      <Image
+        src="/zdd.png"
+        width={100}
+        height={100}
+        alt="Logo 1"
+        className="w-16 h-16 sm:w-32 sm:h-20 object-contain"
+      />
+    </div>
+  </div>
 
+  {/* Second item */}
+  <div className="flex flex-col items-start sm:items-start text-center sm:text-left">
+    <h1 className="text-xs sm:text-xl md:text-sm font-bold text-purple-50 text-md sm:text-xl tracking-wider animate-pulse drop-shadow-lg font-serif">
+      Organised by
+    </h1>
+    <div className="w-38 h-24 sm:w-44 sm:h-20 bg-white rounded-md flex items-center justify-center mb-2 shadow-md">
+      <Image
+        src="/zaa.png"
+        width={100}
+        height={100}
+        alt="Logo 2"
+        className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
+      />
+    </div>
+  </div>
+</div>
+</div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center max-w-7xl mx-auto">
           {/* Left Content */}
           <div
@@ -50,67 +77,68 @@ export default function HeroSection({ onBookNow }: HeroSectionProps) {
             }`}
           >
             <div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 leading-tight transform hover:scale-105 transition-transform duration-300">
-                <span className="bg-gradient-to-r from-white to-orange-100 bg-clip-text text-transparent">
-                  Art Speaks Here: A Day of Art and Dialogue
+              <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-4xl font-bold mb-4 leading-tight transform hover:scale-105 transition-transform duration-300">
+                <span className="bg-gradient-to-r from-white to-pink-100 bg-clip-text text-transparent">
+                  CODEHER: Free Mobile App Development Bootcamp for Women
                 </span>
               </h2>
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-orange-100 leading-relaxed">
-                In today's world, creative expression remains one of the most powerful tools for social change,
-                reflection, and unity. Young voices, artists, and advocates often seek platforms to not only showcase
-                their talent but to also address pressing societal issues in innovative ways.
+              <p className="text-base sm:text-lg md:text-xl lg:text-lg text-pink-100 leading-relaxed">
+                In today’s digital era, technology has become one of the most powerful tools for opportunity, empowerment, and change. For women in Northern Nigeria, learning to build mobile apps is not only a path into tech, but also a gateway to financial independence, creative problem-solving, and global collaboration.
               </p>
             </div>
 
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-6 space-y-3 sm:space-y-4 transform hover:scale-105 hover:bg-white/15 transition-all duration-300">
               <div className="flex  gap-1  justify-start space-y-2 sm:space-y-0 sm:space-x-3">
-                <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-orange-200 flex-shrink-0" />
-                <span className="font-semibold text-sm sm:text-base">Saturday, 23rd August 2025</span>
+                <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
+                <span className="font-semibold text-sm sm:text-base">Monday, 6th October 2025</span>
               </div>
               <div className="flex gap-1 sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
-                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-orange-200 flex-shrink-0" />
-                <span className="font-semibold text-sm sm:text-base">E-Health Africa, 4-6 Independence Road, Kano</span>
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
+                <span className="font-semibold text-sm sm:text-base">InnoSpace X, Murtala Muhammad Library complex, Kano</span>
               </div>
               <div className="flex gap-1 sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
-                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-orange-200 flex-shrink-0" />
-                <span className="font-semibold text-sm sm:text-base">10:00 AM – 6:00 PM</span>
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
+                <span className="font-semibold text-sm sm:text-base">10:00 AM – 1:00 PM</span>
               </div>
               <div className="flex gap-1 sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
-                <Users className="w-4 h-4 sm:w-5 sm:h-5 text-orange-200 flex-shrink-0" />
-                <span className="font-semibold text-sm sm:text-base">Fee: ₦5,000</span>
+                <Users className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 flex-shrink-0" />
+                <span className="font-semibold text-sm sm:text-base">Monday - Friday</span>
               </div>
             </div>
 
             <Button
               onClick={onBookNow}
-              className="bg-white text-orange-600 hover:bg-orange-50 font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full text-base sm:text-lg shadow-lg transform hover:scale-110 hover:shadow-xl transition-all duration-300 w-full sm:w-auto"
+              className="bg-white text-pink-600 hover:bg-pink-50 font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full text-base sm:text-lg shadow-lg transform hover:scale-110 hover:shadow-xl transition-all duration-300 w-full sm:w-auto"
             >
-              <span className="animate-pulse">Buy Ticket</span>
+              <span className="animate-pulse">Register Now</span>
             </Button>
           </div>
 
           {/* Right Content - Artist Image */}
-          <div
-            className={`flex justify-center lg:justify-end order-1 lg:order-2 transition-all duration-1000 delay-500 ${
-              heroVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
-            }`}
-          >
-            <div className="relative group">
-              <div className="w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-white/20 shadow-2xl transform group-hover:scale-105 transition-all duration-500">
-                <Image
-                  src="/za.jpg"
-                  width={500}
-                  height={500}
-                  alt="Artist speaking at Shining Voice Global Link event"
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                />
-              </div>
-              {/* Animated Decorative elements */}
-              <div className="absolute -top-4 -right-4 w-16 sm:w-20 h-16 sm:h-20 bg-white/20 rounded-full blur-xl animate-pulse"></div>
-              <div className="absolute -bottom-4 -left-4 w-12 sm:w-16 h-12 sm:h-16 bg-orange-300/30 rounded-full blur-lg animate-bounce delay-1000"></div>
-              <div className="absolute top-1/2 -left-8 w-8 h-8 bg-white/10 rounded-full animate-ping delay-2000"></div>
-            </div>
-          </div>
+         {/* Right Content - Artist Image */}
+<div
+  className={`flex justify-center lg:justify-end order-1 lg:order-2 transition-all duration-1000 delay-500 ${
+    heroVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
+  }`}
+>
+  <div className="relative group">
+    {/* Keep same size on mobile, bigger only on sm+ */}
+    <div className="w-64 h-64 sm:w-80 sm:h-80 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] rounded-full overflow-hidden border-4 border-white/20 shadow-2xl transform group-hover:scale-105 transition-all duration-500">
+      <Image
+        src="/3.jpg"
+        width={1500}
+        height={1500}
+        alt="Bootcamp Image"
+        className="w-full h-full object-cover transform group-hover:scale-150 transition-transform duration-700"
+      />
+    </div>
+
+    {/* Animated Decorative elements */}
+    <div className="absolute -top-6 -right-6 w-16 sm:w-20 md:w-24 h-16 sm:h-20 md:h-24 bg-white/20 rounded-full blur-xl animate-pulse"></div>
+    <div className="absolute -bottom-6 -left-6 w-12 sm:w-16 md:w-20 h-12 sm:h-16 md:h-20 bg-blue-300/30 rounded-full blur-lg animate-bounce delay-1000"></div>
+    <div className="absolute top-1/2 -left-8 w-8 sm:w-10 md:w-12 h-8 sm:h-10 md:h-12 bg-white/10 rounded-full animate-ping delay-2000"></div>
+  </div>
+</div>
         </div>
 
         {/* Organized by section */}
@@ -119,14 +147,7 @@ export default function HeroSection({ onBookNow }: HeroSectionProps) {
             heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 transform hover:scale-105 transition-transform duration-300">
-            Organized by Shining Voice Global Link!
-          </h3>
-          <p className="text-base sm:text-lg md:text-xl text-orange-100 max-w-4xl mx-auto leading-relaxed px-4">
-            Step into a world where creativity meets conversation, and expression sparks transformation. Join us for Art
-            Speaks Here: A Day of Art & Dialogue — a powerful one-day event that brings together artists, poets, youth
-            advocates, and changemakers in Kano!
-          </p>
+         
         </div>
 
         {/* Scroll Down Indicator */}
