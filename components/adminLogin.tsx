@@ -29,13 +29,13 @@ export default function AdminLogin() {
     const errors: { email?: string; password?: string } = {}
 
     if (!formData.email.trim()) {
-      errors.email = "Email is required"
+      errors.email = "Email is requipink"
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       errors.email = "Email is invalid"
     }
 
     if (!formData.password.trim()) {
-      errors.password = "Password is required"
+      errors.password = "Password is requipink"
     } else if (formData.password.length < 6) {
       errors.password = "Password must be at least 6 characters"
     }
@@ -73,11 +73,11 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
             <Shield className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Login</h1>
@@ -86,8 +86,8 @@ export default function AdminLogin() {
 
         {/* Login Form */}
         <Card className="shadow-lg">
-          <CardHeader className="bg-gradient-to-r from-orange-50 to-red-50">
-            <CardTitle className="flex items-center text-orange-700">
+          <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50">
+            <CardTitle className="flex items-center text-purple-700">
               <Lock className="w-5 h-5 mr-2" />
               Secure Access
             </CardTitle>
@@ -96,9 +96,9 @@ export default function AdminLogin() {
           <CardContent className="p-6">
             {/* API Error Display */}
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start space-x-2">
-                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                <p className="text-red-800 text-sm">{error}</p>
+              <div className="bg-pink-50 border border-pink-200 rounded-lg p-4 mb-6 flex items-start space-x-2">
+                <AlertCircle className="w-5 h-5 text-pink-500 flex-shrink-0 mt-0.5" />
+                <p className="text-pink-800 text-sm">{error}</p>
               </div>
             )}
 
@@ -114,11 +114,11 @@ export default function AdminLogin() {
                     onChange={(e) => handleInputChange("email", e.target.value)}
                     placeholder="admin@shiningvoice.com"
                     className={`pl-10 ${
-                      formErrors.email ? "border-red-500" : "border-gray-300"
-                    } focus:border-orange-400 focus:ring-orange-400 transition-all duration-300`}
+                      formErrors.email ? "border-pink-500" : "border-gray-300"
+                    } focus:border-purple-400 focus:ring-purple-400 transition-all duration-300`}
                   />
                 </div>
-                {formErrors.email && <p className="text-red-500 text-sm mt-1 animate-bounce">{formErrors.email}</p>}
+                {formErrors.email && <p className="text-pink-500 text-sm mt-1 animate-bounce">{formErrors.email}</p>}
               </div>
 
               {/* Password Field */}
@@ -132,19 +132,19 @@ export default function AdminLogin() {
                     onChange={(e) => handleInputChange("password", e.target.value)}
                     placeholder="Enter your password"
                     className={`pl-10 ${
-                      formErrors.password ? "border-red-500" : "border-gray-300"
-                    } focus:border-orange-400 focus:ring-orange-400 transition-all duration-300`}
+                      formErrors.password ? "border-pink-500" : "border-gray-300"
+                    } focus:border-purple-400 focus:ring-purple-400 transition-all duration-300`}
                   />
                 </div>
                 {formErrors.password && (
-                  <p className="text-red-500 text-sm mt-1 animate-bounce">{formErrors.password}</p>
+                  <p className="text-pink-500 text-sm mt-1 animate-bounce">{formErrors.password}</p>
                 )}
               </div>
 
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white py-3 rounded-lg font-medium text-lg transform hover:scale-105 hover:shadow-lg transition-all duration-300"
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white py-3 rounded-lg font-medium text-lg transform hover:scale-105 hover:shadow-lg transition-all duration-300"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -167,7 +167,7 @@ export default function AdminLogin() {
 
         {/* Footer */}
         <div className="text-center mt-6">
-          <p className="text-gray-500 text-sm">© 2025 Shining Voice Global Link. All rights reserved.</p>
+          <p className="text-gray-500 text-sm">© 2025 Mtata a Fasaha. All rights reserved.</p>
         </div>
       </div>
     </div>

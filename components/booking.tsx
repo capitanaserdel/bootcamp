@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,10 +39,16 @@ export default function RegistrationForm() {
     laptopSpecFile: null,
   });
 
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [isComplete, setIsComplete] = useState(false);
   const [apiLoading, setApiLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  
+const refreshPage = () => {
+  window.location.reload();
+}
+
 
   const steps = [
     { number: 1, title: "Personal Info", icon: User },
@@ -302,8 +308,8 @@ export default function RegistrationForm() {
               You'll receive a confirmation email shortly.
             </p>
 
-            <Link href="/hero">
-              <Button variant="ghost" className="mt-4 rounded-lg border-purple-500 border w-full h-10">
+            <Link href="">
+              <Button onClick={refreshPage} variant="ghost" className="mt-4 rounded-lg border-purple-500 border w-full h-10">
                 Done
               </Button>
             </Link>
