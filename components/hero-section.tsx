@@ -123,9 +123,9 @@ export default function HeroSection({ onBookNow }: HeroSectionProps) {
 >
   <div className="relative group">
     {/* Keep same size on mobile, bigger only on sm+ */}
-    <div className="w-64 h-64 sm:w-80 sm:h-80 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] rounded-full overflow-hidden border-4 border-white/20 shadow-2xl transform group-hover:scale-105 transition-all duration-500">
+    <div className="w-64 h-64 sm:w-80 sm:h-80 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] rounded-lg overflow-hidden border-4 border-white/20 shadow-2xl transform group-hover:scale-105 transition-all duration-500">
       <Image
-        src="/3.jpg"
+        src="/4.jpg"
         width={1500}
         height={1500}
         alt="Bootcamp Image"
