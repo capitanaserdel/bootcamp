@@ -33,10 +33,10 @@ export async function uploadToCloudinary(formData: FormData) {
       }),
     })
 
-    if (!uploadResponse.ok) {
-      const errorData = await uploadResponse.json()
-      throw new Error(`Cloudinary upload failed: ${errorData.error?.message || "Unknown error"}`)
-    }
+    // if (!uploadResponse.ok) {
+    //   const errorData = await uploadResponse.json()
+    //   throw new Error(`Cloudinary upload failed: ${errorData.error?.message || "Unknown error"}`)
+    // }
 
     const result = await uploadResponse.json()
 
