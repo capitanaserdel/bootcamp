@@ -185,7 +185,6 @@ export default function RegistrationForm() {
               >
                 <option value="">Select Gender</option>
                 <option value="Female">Female</option>
-                <option value="Male">Male</option>
               </select>
               {errors.gender && <p className="text-red-500 text-xs">{errors.gender}</p>}
             </div>
