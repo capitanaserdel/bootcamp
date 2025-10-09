@@ -34,7 +34,7 @@ export default function EventDetails() {
     },
     {
       time: "Week 2-4",
-      title: "echnical training (Flutter, UI/UX, APIs) with mini-projects",
+      title: "Technical training (Flutter, UI/UX, APIs) with mini-projects",
       description: "The power of creative expression in social change",
     },
     {

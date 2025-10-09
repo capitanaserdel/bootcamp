@@ -329,8 +329,7 @@ export default function RegistrationForm() {
               Registration Successful 🎉
             </h2>
             <p className="text-sm text-gray-600 mt-2">
-              You'll receive a confirmation email shortly.
-            </p>
+Join our Whatsapp Community using             </p>
             <Button onClick={refreshPage} variant="ghost" className="mt-4 w-full">
               Done
             </Button>
