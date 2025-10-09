@@ -264,7 +264,7 @@ export default function RegistrationForm() {
             }}
             className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm h-10"
           >
-            Upload Laptop Spec
+            Upload Laptop Specification
           </Button>
         )}
       </CldUploadWidget>
