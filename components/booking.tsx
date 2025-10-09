@@ -329,7 +329,7 @@ export default function RegistrationForm() {
               Registration Successful 🎉
             </h2>
             <p className="text-sm text-gray-600 mt-2">
-Join our Whatsapp Community using             </p>
+Join our Whatsapp Community using https://chat.whatsapp.com/KHMFQxFNPVr5zj3jw8ipFQ?mode=ems_copy_t            </p>
             <Button onClick={refreshPage} variant="ghost" className="mt-4 w-full">
               Done
             </Button>
